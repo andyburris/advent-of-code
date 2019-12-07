@@ -1,5 +1,6 @@
 package com.andb.adventofcode.year2019.day2
 
+import com.andb.adventofcode.year2019.common.toIntcode
 import java.io.File
 
 private val reader = File("src/com/andb/adventofcode/year2019/day2/input.txt").bufferedReader()
@@ -9,22 +10,24 @@ fun main() {
     partTwo()
 }
 
-private fun partOne(){
+private fun partOne() {
     val intcode = reader.readLine().split(",").map { it.toInt() }.toIntcode()
-    intcode.input(12, 2)
-    println(intcode.run())
+    intcode.inputIntoCode(12, 2)
+    intcode.run()
+    println(intcode.outputFromCode())
 }
 
 private val DESIRED_OUTPUT = 19690720
-private fun partTwo(){
+private fun partTwo() {
     val intcode = reader.readLine().split(",").map { it.toInt() }.toIntcode()
     var finalNoun = -1
     var finalVerb = -1
-    for (noun in 0..99){
-        for (verb in 0..99){
+    for (noun in 0..99) {
+        for (verb in 0..99) {
             val clone = intcode.toIntcode()
-            clone.input(noun, verb)
-            if(clone.run()== DESIRED_OUTPUT){
+            clone.inputIntoCode(noun, verb)
+            clone.run()
+            if (clone.outputFromCode() == DESIRED_OUTPUT) {
                 finalNoun = noun
                 finalVerb = verb
             }

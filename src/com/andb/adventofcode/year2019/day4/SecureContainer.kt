@@ -1,5 +1,7 @@
 package com.andb.adventofcode.year2019.day4
 
+import com.andb.adventofcode.year2019.common.toDigits
+
 private const val LOWER_BOUND = 130254
 private const val UPPER_BOUND = 678275
 private val allSixDigits = (0..999999).toList()
@@ -24,16 +26,6 @@ fun partTwo(): Int{
         .filter { it.hasExactDuplicates() }
         .filter { it == it.sorted()  }
         .size
-}
-
-private fun Int.toDigits() : List<Int> {
-    var temp = this
-    val list = mutableListOf<Int>()
-    while (temp > 0) {
-        list.add(temp % 10)
-        temp /= 10
-    }
-    return list.reversed()
 }
 
 private fun <T> List<T>.hasDuplicates() = groupBy { it }.any { it.value.size > 1 }
