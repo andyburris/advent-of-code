@@ -12,16 +12,14 @@ fun main(){
 
 private fun partOne(){
     val intcode = reader.readLine().split(",").map { it.toInt() }.toIntcode()
-    intcode.input = 1
+    intcode.input = mutableListOf(1)
     println(intcode.run())
 }
 
 private fun partTwo(){
     val intcode = reader.readLine().split(",").map { it.toInt() }.toIntcode()
-    intcode.input = 5
+    intcode.input = mutableListOf(5)
     println(intcode.run())
-    println(intcode.size)
-    println(intcode[223])
 }
 
 private fun testSuite(){
@@ -35,39 +33,39 @@ private fun testSuite(){
     val reddit1 = testReader.readLine().split(",").map { it.toInt() }.toIntcode()
     val reddit2 = testReader.readLine().split(",").map { it.toInt() }.toIntcode()
 
-    comparison1.toIntcode().apply { input = 8; check(run() == 1) }
-    comparison1.toIntcode().apply { input = 5; check(run() == 0) }
-    comparison1.toIntcode().apply { input = 10; check(run() == 0) }
+    comparison1.toIntcode().apply { input = mutableListOf(8); check(run() == 1) }
+    comparison1.toIntcode().apply { input = mutableListOf(5); check(run() == 0) }
+    comparison1.toIntcode().apply { input = mutableListOf(10); check(run() == 0) }
 
-    comparison2.toIntcode().apply { input = 8; check(run() == 0) }
-    comparison2.toIntcode().apply { input = 5; check(run() == 1) }
-    comparison2.toIntcode().apply { input = 10; check(run() == 0) }
+    comparison2.toIntcode().apply { input = mutableListOf(8); check(run() == 0) }
+    comparison2.toIntcode().apply { input = mutableListOf(5); check(run() == 1) }
+    comparison2.toIntcode().apply { input = mutableListOf(10); check(run() == 0) }
 
-    comparison3.toIntcode().apply { input = 8; check(run() == 1) }
-    comparison3.toIntcode().apply { input = 5; check(run() == 0) }
-    comparison3.toIntcode().apply { input = 10; check(run() == 0) }
+    comparison3.toIntcode().apply { input = mutableListOf(8); check(run() == 1) }
+    comparison3.toIntcode().apply { input = mutableListOf(5); check(run() == 0) }
+    comparison3.toIntcode().apply { input = mutableListOf(10); check(run() == 0) }
 
-    comparison4.toIntcode().apply { input = 8; check(run() == 0) }
-    comparison4.toIntcode().apply { input = 5; check(run() == 1) }
-    comparison4.toIntcode().apply { input = 10; check(run() == 0) }
+    comparison4.toIntcode().apply { input = mutableListOf(8); check(run() == 0) }
+    comparison4.toIntcode().apply { input = mutableListOf(5); check(run() == 1) }
+    comparison4.toIntcode().apply { input = mutableListOf(10); check(run() == 0) }
 
-    jump1.toIntcode().apply { input = 0; check(run() == 0) }
-    jump1.toIntcode().apply { input = 1; check(run() == 1) }
-    jump1.toIntcode().apply { input = 84; check(run() == 1) }
+    jump1.toIntcode().apply { input = mutableListOf(0); check(run() == 0) }
+    jump1.toIntcode().apply { input = mutableListOf(1); check(run() == 1) }
+    jump1.toIntcode().apply { input = mutableListOf(84); check(run() == 1) }
 
-    jump2.toIntcode().apply { input = 0; check(run() == 0) }
-    jump2.toIntcode().apply { input = 1; check(run() == 1) }
-    jump2.toIntcode().apply { input = 84; check(run() == 1) }
+    jump2.toIntcode().apply { input = mutableListOf(0); check(run() == 0) }
+    jump2.toIntcode().apply { input = mutableListOf(1); check(run() == 1) }
+    jump2.toIntcode().apply { input = mutableListOf(84); check(run() == 1) }
 
-    integration.toIntcode().apply { input = 8; check(run() == 1000) }
-    integration.toIntcode().apply { input = 5; check(run() == 999) }
-    integration.toIntcode().apply { input = 7; check(run() == 999) }
-    integration.toIntcode().apply { input = 0; check(run() == 999) }
-    integration.toIntcode().apply { input = 10; check(run() == 1001) }
-    integration.toIntcode().apply { input = 9; check(run() == 1001) }
-    integration.toIntcode().apply { input = 84; check(run() == 1001) }
+    integration.toIntcode().apply { input = mutableListOf(8); check(run() == 1000) }
+    integration.toIntcode().apply { input = mutableListOf(5); check(run() == 999) }
+    integration.toIntcode().apply { input = mutableListOf(7); check(run() == 999) }
+    integration.toIntcode().apply { input = mutableListOf(0); check(run() == 999) }
+    integration.toIntcode().apply { input = mutableListOf(10); check(run() == 1001) }
+    integration.toIntcode().apply { input = mutableListOf(9); check(run() == 1001) }
+    integration.toIntcode().apply { input = mutableListOf(84); check(run() == 1001) }
 
-    reddit1.toIntcode().apply { input = 0; check(run() == 0) }
-    reddit2.toIntcode().apply { input = 0; check(run() == 0) }
+    reddit1.toIntcode().apply { input = mutableListOf(0); check(run() == 0) }
+    reddit2.toIntcode().apply { input = mutableListOf(0); check(run() == 0) }
 
 }
