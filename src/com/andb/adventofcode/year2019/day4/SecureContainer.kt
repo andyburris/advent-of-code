@@ -12,7 +12,7 @@ fun main() {
     println(partTwo())
 }
 
-fun partOne(): Int{
+private fun partOne(): Int{
     return allSixDigits.filter { it in LOWER_BOUND..UPPER_BOUND }
         .map { it.toDigits() }
         .filter { it.hasDuplicates() }
@@ -20,7 +20,7 @@ fun partOne(): Int{
         .size
 }
 
-fun partTwo(): Int{
+private fun partTwo(): Int{
     return allSixDigits.filter { it in LOWER_BOUND..UPPER_BOUND }
         .map { it.toDigits() }
         .filter { it.hasExactDuplicates() }

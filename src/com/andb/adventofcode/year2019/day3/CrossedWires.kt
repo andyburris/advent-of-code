@@ -16,13 +16,13 @@ fun main(){
     partTwo(firstPath, secondPath)
 }
 
-fun partOne(firstPath: Path, secondPath: Path){
+private fun partOne(firstPath: Path, secondPath: Path){
     val intersects = firstPath.intersects(secondPath)
     val min = intersects.map { it.x.absoluteValue + it.y.absoluteValue }.minBy { it } ?: -1
     println("Total Manhattan distance: $min")
 }
 
-fun partTwo(firstPath: Path, secondPath: Path){
+private fun partTwo(firstPath: Path, secondPath: Path){
     val intersects = firstPath.intersectsTimed(secondPath)
     val min = intersects.map { it.first.absoluteValue }.minBy { it } ?: -1
     println("Total Manhattan distance: $min")
