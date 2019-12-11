@@ -1,5 +1,6 @@
 package com.andb.adventofcode.year2019.day2
 
+import com.andb.adventofcode.year2019.common.clone
 import com.andb.adventofcode.year2019.common.toIntcode
 import java.io.File
 
@@ -24,7 +25,7 @@ private fun partTwo() {
     var finalVerb = -1
     for (noun in 0..99) {
         for (verb in 0..99) {
-            val clone = intcode.toIntcode()
+            val clone = intcode.clone()
             clone.inputIntoCode(noun, verb)
             clone.run()
             if (clone.outputFromCode() == DESIRED_OUTPUT) {

@@ -1,47 +1,53 @@
 package com.andb.adventofcode.year2019.common
 
-import java.lang.StringBuilder
+open class Intcode(val program: MutableList<Long>) {
 
-open class Intcode : ArrayList<Int>() {
+    var currentPointer = 0L
+    var relativeBase = 0L
+    var input = mutableListOf<Long>(1)
+    open var output = 0L
+        set(value) {
+            field = value
+            allOutputs.add(value)
+        }
 
-    var currentPointer = 0
-    var input = mutableListOf<Int>(1)
-    open var output = 0
+    val allOutputs = mutableListOf<Long>()
 
     fun inputIntoCode(input1: Int, input2: Int) {
-        this[1] = input1
-        this[2] = input2
+        program[1] = input1.toLong()
+        program[2] = input2.toLong()
     }
 
-    fun outputFromCode() = this[0]
+    fun outputFromCode() = program[0].toInt()
 
-    fun run(): Int {
+    fun run(): Long {
         var flag = true
-        //println("opcode: ${this[currentPointer]%100}, inputs: $input, $this")
+        //println("opcode: ${program[currentPointer]%100}, inputs: $input, $this")
         while (flag) {
             val (opcode, params) = getOpcodeAndParams()
             when (opcode) {
-                is Opcode.Add -> { this[params[2]] = this[params[0]] + this[params[1]] }
-                is Opcode.Multiply -> { this[params[2]] = this[params[0]] * this[params[1]] }
-                is Opcode.InputTo -> { if(input.isNotEmpty()) this[params[0]] = input.removeAt(0) else currentPointer-= opcode.size}
-                is Opcode.OutputFrom ->{ this.output = this[params[0]] }
-                is Opcode.JumpIfTrue -> { if(this[params[0]] != 0){ currentPointer = this[params[1]] - opcode.size } }
-                is Opcode.JumpIfFalse -> { if(this[params[0]] == 0){ currentPointer = this[params[1]] - opcode.size } }
-                is Opcode.LessThan -> { this[params[2]] = if(this[params[0]] < this[params[1]]) 1 else 0 }
-                is Opcode.Equals -> { this[params[2]] = if(this[params[0]] == this[params[1]]) 1 else 0 }
+                is Opcode.Add -> { program[params[2]] = program[params[0]] + program[params[1]] }
+                is Opcode.Multiply -> { program[params[2]] = program[params[0]] * program[params[1]] }
+                is Opcode.InputTo -> { if(input.isNotEmpty()) program[params[0]] = input.removeAt(0) else currentPointer-= opcode.size}
+                is Opcode.OutputFrom ->{ this.output = program[params[0]] }
+                is Opcode.JumpIfTrue -> { if(program[params[0]] != 0L){ currentPointer = program[params[1]] - opcode.size } }
+                is Opcode.JumpIfFalse -> { if(program[params[0]] == 0L){ currentPointer = program[params[1]] - opcode.size } }
+                is Opcode.LessThan -> { program[params[2]] = if(program[params[0]] < program[params[1]]) 1 else 0 }
+                is Opcode.Equals -> { program[params[2]] = if(program[params[0]] == program[params[1]]) 1 else 0 }
+                is Opcode.RelativeBase -> { relativeBase += program[params[0]]}
                 else -> { flag = false; }
             }
             currentPointer += opcode.size
-            //println("opcode: ${this[currentPointer]%100}, inputs: $input, $this")
+            //println("opcode: ${program[currentPointer]%100}, inputs: $input, $this")
 
         }
         return output
     }
 
     fun getOpcodeAndParams(): Pair<Opcode, List<Parameter>>{
-        val instruction = this[currentPointer]
+        val instruction = program[currentPointer.toInt()]
         val code = instruction%100
-        val opcode = when(code){
+        val opcode = when(code.toInt()){
             1->Opcode.Add()
             2->Opcode.Multiply()
             3->Opcode.InputTo()
@@ -50,22 +56,32 @@ open class Intcode : ArrayList<Int>() {
             6->Opcode.JumpIfFalse()
             7->Opcode.LessThan()
             8->Opcode.Equals()
+            9->Opcode.RelativeBase()
             99-> return Pair(Opcode.Stop(), listOf())
             else-> return Pair(Opcode.Error(), listOf())
         }
-        val values = this.slice(currentPointer+1..currentPointer+opcode.size)
-        val modes = (instruction/100).toDigits().reversed().extendTo(opcode.size)
+        val values = program.slice((currentPointer+1).toInt()..(currentPointer+opcode.size).toInt())
+        val modes = (instruction/100).toInt().toDigits().reversed().extendTo(opcode.size)
         val params = (0 until opcode.size-1).map { Parameter(modes[it], values[it]) }
         //println("params for $instruction: $params")
         return Pair(opcode, params)
     }
 
-    operator fun MutableList<Int>.get(parameter: Parameter): Int{
-        return if(parameter.mode == 0) this[parameter.value] else parameter.value
+    operator fun MutableList<Long>.get(parameter: Parameter): Long{
+        return when(parameter.mode){
+            0-> { extendToApply(parameter.value.toInt() + 1, 0); program[parameter.value.toInt()] }
+            1-> parameter.value
+            else -> { extendToApply(parameter.value.toInt() + 1, 0); program[(relativeBase + parameter.value).toInt()] }
+        }
     }
 
-    operator fun MutableList<Int>.set(parameter: Parameter, value: Int){
-        this[parameter.value] = value
+    operator fun MutableList<Long>.set(index: Parameter, element: Number){
+        extendToApply((index.value + relativeBase.coerceAtLeast(0) + 1).toInt(), 0)
+        when(index.mode){
+            0, 1 -> program[index.value.toInt()] = element.toLong()
+            2->program[relativeBase.toInt() + index.value.toInt()] = element.toLong()
+        }
+
     }
 
     override fun toString(): String {
@@ -74,6 +90,7 @@ open class Intcode : ArrayList<Int>() {
     }
 }
 
-data class Parameter(val mode: Int, val value: Int)
+data class Parameter(val mode: Int, val value: Long)
 
-fun Collection<Int>.toIntcode() = this.toCollection(Intcode())
+fun Collection<Number>.toIntcode() = Intcode(this.map { it.toLong() }.toMutableList())
+fun Intcode.clone() = Intcode(this.program)

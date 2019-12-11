@@ -1,5 +1,6 @@
 package com.andb.adventofcode.year2019.day5
 
+import com.andb.adventofcode.year2019.common.clone
 import com.andb.adventofcode.year2019.common.toIntcode
 import java.io.File
 
@@ -33,39 +34,39 @@ private fun testSuite(){
     val reddit1 = testReader.readLine().split(",").map { it.toInt() }.toIntcode()
     val reddit2 = testReader.readLine().split(",").map { it.toInt() }.toIntcode()
 
-    comparison1.toIntcode().apply { input = mutableListOf(8); check(run() == 1) }
-    comparison1.toIntcode().apply { input = mutableListOf(5); check(run() == 0) }
-    comparison1.toIntcode().apply { input = mutableListOf(10); check(run() == 0) }
+    comparison1.clone().apply { input = mutableListOf(8); check(run() == 1L) }
+    comparison1.clone().apply { input = mutableListOf(5); check(run() == 0L) }
+    comparison1.clone().apply { input = mutableListOf(10); check(run() == 0L) }
 
-    comparison2.toIntcode().apply { input = mutableListOf(8); check(run() == 0) }
-    comparison2.toIntcode().apply { input = mutableListOf(5); check(run() == 1) }
-    comparison2.toIntcode().apply { input = mutableListOf(10); check(run() == 0) }
+    comparison2.clone().apply { input = mutableListOf(8); check(run() == 0L) }
+    comparison2.clone().apply { input = mutableListOf(5); check(run() == 1L) }
+    comparison2.clone().apply { input = mutableListOf(10); check(run() == 0L) }
 
-    comparison3.toIntcode().apply { input = mutableListOf(8); check(run() == 1) }
-    comparison3.toIntcode().apply { input = mutableListOf(5); check(run() == 0) }
-    comparison3.toIntcode().apply { input = mutableListOf(10); check(run() == 0) }
+    comparison3.clone().apply { input = mutableListOf(8); check(run() == 1L) }
+    comparison3.clone().apply { input = mutableListOf(5); check(run() == 0L) }
+    comparison3.clone().apply { input = mutableListOf(10); check(run() == 0L) }
 
-    comparison4.toIntcode().apply { input = mutableListOf(8); check(run() == 0) }
-    comparison4.toIntcode().apply { input = mutableListOf(5); check(run() == 1) }
-    comparison4.toIntcode().apply { input = mutableListOf(10); check(run() == 0) }
+    comparison4.clone().apply { input = mutableListOf(8); check(run() == 0L) }
+    comparison4.clone().apply { input = mutableListOf(5); check(run() == 1L) }
+    comparison4.clone().apply { input = mutableListOf(10); check(run() == 0L) }
 
-    jump1.toIntcode().apply { input = mutableListOf(0); check(run() == 0) }
-    jump1.toIntcode().apply { input = mutableListOf(1); check(run() == 1) }
-    jump1.toIntcode().apply { input = mutableListOf(84); check(run() == 1) }
+    jump1.clone().apply { input = mutableListOf(0); check(run() == 0L) }
+    jump1.clone().apply { input = mutableListOf(1); check(run() == 1L) }
+    jump1.clone().apply { input = mutableListOf(84); check(run() == 1L) }
 
-    jump2.toIntcode().apply { input = mutableListOf(0); check(run() == 0) }
-    jump2.toIntcode().apply { input = mutableListOf(1); check(run() == 1) }
-    jump2.toIntcode().apply { input = mutableListOf(84); check(run() == 1) }
+    jump2.clone().apply { input = mutableListOf(0); check(run() == 0L) }
+    jump2.clone().apply { input = mutableListOf(1); check(run() == 1L) }
+    jump2.clone().apply { input = mutableListOf(84); check(run() == 1L) }
 
-    integration.toIntcode().apply { input = mutableListOf(8); check(run() == 1000) }
-    integration.toIntcode().apply { input = mutableListOf(5); check(run() == 999) }
-    integration.toIntcode().apply { input = mutableListOf(7); check(run() == 999) }
-    integration.toIntcode().apply { input = mutableListOf(0); check(run() == 999) }
-    integration.toIntcode().apply { input = mutableListOf(10); check(run() == 1001) }
-    integration.toIntcode().apply { input = mutableListOf(9); check(run() == 1001) }
-    integration.toIntcode().apply { input = mutableListOf(84); check(run() == 1001) }
+    integration.clone().apply { input = mutableListOf(8); check(run() == 1000L) }
+    integration.clone().apply { input = mutableListOf(5); check(run() == 999L) }
+    integration.clone().apply { input = mutableListOf(7); check(run() == 999L) }
+    integration.clone().apply { input = mutableListOf(0); check(run() == 999L) }
+    integration.clone().apply { input = mutableListOf(10); check(run() == 1001L) }
+    integration.clone().apply { input = mutableListOf(9); check(run() == 1001L) }
+    integration.clone().apply { input = mutableListOf(84); check(run() == 1001L) }
 
-    reddit1.toIntcode().apply { input = mutableListOf(0); check(run() == 0) }
-    reddit2.toIntcode().apply { input = mutableListOf(0); check(run() == 0) }
+    reddit1.clone().apply { input = mutableListOf(0); check(run() == 0L) }
+    reddit2.clone().apply { input = mutableListOf(0); check(run() == 0L) }
 
 }

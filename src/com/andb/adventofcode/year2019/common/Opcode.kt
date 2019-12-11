@@ -9,6 +9,7 @@ sealed class Opcode(val size: Int){
     class JumpIfFalse : Opcode(3)
     class LessThan : Opcode(4)
     class Equals : Opcode(4)
+    class RelativeBase : Opcode(2)
     class Stop : Opcode(1)
     class Error : Opcode(0)
 }
