@@ -1,8 +1,10 @@
 package com.andb.adventofcode.year2019.common
 
 import kotlinx.coroutines.*
+import kotlin.math.pow
 
 fun Int.toDigits(): List<Int> = this.toString().toCharArray().map { it.toString().toInt() }
+fun Int.pow(exponent: Int) = this.toDouble().pow(exponent)
 
 fun List<Int>.extendTo(to: Int, insert: Int = 0): List<Int> {
     if(to > this.size){
@@ -21,6 +23,12 @@ fun <T> MutableList<T>.extendToApply(to: Int, insert: T){
         for (i in size until to) {
             this.add(insert)
         }
+    }
+}
+
+fun <K, V> MutableMap<K, V>.removeAll(keys: List<K>){
+    for (k in keys){
+        this.remove(k)
     }
 }
 
