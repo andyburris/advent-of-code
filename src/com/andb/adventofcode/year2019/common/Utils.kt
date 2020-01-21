@@ -35,3 +35,4 @@ fun <K, V> MutableMap<K, V>.removeAll(keys: List<K>){
 fun newIOThread(block: suspend CoroutineScope.() -> Unit) = CoroutineScope(Dispatchers.IO).launch { block.invoke(this) }
 
 fun newThread(block: suspend CoroutineScope.() -> Unit): Job = CoroutineScope(Dispatchers.Default).launch { block.invoke(this) }
+data class Coordinate(var x: Int, var y: Int)

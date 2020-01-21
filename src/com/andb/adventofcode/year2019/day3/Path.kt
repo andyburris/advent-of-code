@@ -1,5 +1,7 @@
 package com.andb.adventofcode.year2019.day3
 
+import com.andb.adventofcode.year2019.common.Coordinate
+
 class Path(components: List<PathComponent>) {
     val points = mutableListOf(Coordinate(0, 0))
 
@@ -25,6 +27,5 @@ class Path(components: List<PathComponent>) {
 }
 
 class PathComponent(val direction: Char, val length: Int)
-data class Coordinate(val x: Int, val y: Int)
 
 fun String.toPathComponent() = PathComponent(this[0], substring(1).toInt())

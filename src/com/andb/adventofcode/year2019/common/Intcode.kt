@@ -13,7 +13,7 @@ open class Intcode(val program: MutableList<Long>) {
         }
 
     val allOutputs = mutableListOf<Long>()
-    var onOutput: (Long)->Unit = {}
+    var onOutput: (output: Long)->Unit = {}
 
     @Deprecated("Use input/output variables instead")
     fun inputIntoCode(input1: Int, input2: Int) {
