@@ -11,7 +11,7 @@ class Amplifier(val id: Int, program: MutableList<Long>) : Intcode(program) {
             allOutputs.add(value)
             nextLink.input.add(value)
             //println("outputting $value to amp ${nextLink.id}")
-            //println("output recieved? amp ${nextLink.id}.input = ${nextLink.input}")
+            //println("products recieved? amp ${nextLink.id}.input = ${nextLink.input}")
         }
 
     override fun toString(): String {

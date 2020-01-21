@@ -15,18 +15,18 @@ open class Intcode(val program: MutableList<Long>) {
     val allOutputs = mutableListOf<Long>()
     var onOutput: (output: Long)->Unit = {}
 
-    @Deprecated("Use input/output variables instead")
+    @Deprecated("Use input/products variables instead")
     fun inputIntoCode(input1: Int, input2: Int) {
         program[1] = input1.toLong()
         program[2] = input2.toLong()
     }
 
-    @Deprecated("Use input/output variables instead")
+    @Deprecated("Use input/products variables instead")
     fun outputFromCode() = program[0].toInt()
 
     fun run(): Long {
         var flag = true
-        //println("opcode: ${program[currentPointer]%100}, inputs: $input, $this")
+        //println("opcode: ${program[currentPointer]%100}, reactants: $input, $this")
         while (flag) {
             val (opcode, params) = getOpcodeAndParams()
             when (opcode) {
@@ -42,7 +42,7 @@ open class Intcode(val program: MutableList<Long>) {
                 else -> { flag = false; }
             }
             currentPointer += opcode.size
-            //println("opcode: ${program[currentPointer]%100}, inputs: $input, $this")
+            //println("opcode: ${program[currentPointer]%100}, reactants: $input, $this")
 
         }
         return output

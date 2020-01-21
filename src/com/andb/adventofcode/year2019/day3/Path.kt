@@ -27,5 +27,4 @@ class Path(components: List<PathComponent>) {
 }
 
 class PathComponent(val direction: Char, val length: Int)
-
 fun String.toPathComponent() = PathComponent(this[0], substring(1).toInt())

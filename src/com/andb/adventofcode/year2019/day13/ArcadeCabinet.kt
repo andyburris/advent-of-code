@@ -11,10 +11,6 @@ import javax.swing.JPanel
 private val reader = File("src/com/andb/adventofcode/year2019/day13/input.txt").bufferedReader()
 private val testReader = File("src/com/andb/adventofcode/year2019/day13/test.txt").bufferedReader()
 
-class ArcadeCabinet() : JPanel(){
-
-}
-
 fun main(){
     partTwo()
 }
