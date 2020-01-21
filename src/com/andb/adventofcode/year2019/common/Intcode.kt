@@ -9,9 +9,11 @@ open class Intcode(val program: MutableList<Long>) {
         set(value) {
             field = value
             allOutputs.add(value)
+            onOutput.invoke(value)
         }
 
     val allOutputs = mutableListOf<Long>()
+    var onOutput: (output: Long)->Unit = {}
 
     fun inputIntoCode(input1: Int, input2: Int) {
         program[1] = input1.toLong()
