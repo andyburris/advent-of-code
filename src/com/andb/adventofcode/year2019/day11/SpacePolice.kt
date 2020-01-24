@@ -1,6 +1,7 @@
 package com.andb.adventofcode.year2019.day11
 
 import com.andb.adventofcode.year2019.common.Coordinate
+import com.andb.adventofcode.year2019.common.Direction
 import com.andb.adventofcode.year2019.common.toIntcode
 import java.io.File
 
@@ -105,17 +106,4 @@ private data class Robot(var coordinate: Coordinate, var direction: Direction) {
             Direction.EAST -> coordinate.x++
         }
     }
-}
-
-private enum class Direction {
-    NORTH, WEST, SOUTH, EAST;
-
-    fun ccw() = when (this) {
-        NORTH -> WEST
-        WEST -> SOUTH
-        SOUTH -> EAST
-        EAST -> NORTH
-    }
-
-    fun cw() = this.ccw().ccw().ccw()
 }

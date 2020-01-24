@@ -1,7 +1,15 @@
 package com.andb.adventofcode.year2019.common
 
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import java.awt.Color
+import java.io.BufferedReader
 import kotlin.math.pow
+import kotlin.random.Random
+
+fun BufferedReader.toIntcode() = this.readLine().split(",").map { it.toInt() }.toIntcode()
 
 /* Number Utils */
 fun Int.toDigits(): List<Int> = this.toString().toCharArray().map { it.toString().toInt() }
@@ -50,4 +58,11 @@ public inline fun <K, V> Map<K,V>.sumByLong(block: (Map.Entry<K, V>)->Long): Lon
     var sum = 0L
     this.forEach { sum+=block.invoke(it) }
     return sum
+}
+
+fun randomColor(): Color? {
+    val r: Int = Random.nextInt(0, 255)
+    val g: Int = Random.nextInt(0, 255)
+    val b: Int = Random.nextInt(0, 255)
+    return Color(r, g, b)
 }

@@ -4,6 +4,9 @@ open class Intcode(val program: MutableList<Long>) {
 
     var currentPointer = 0L
     var relativeBase = 0L
+    /**
+     * Input queue for the program. Each value is removed once it is read.
+     */
     var input = mutableListOf<Long>(1)
     open var output = 0L
         set(value) {
