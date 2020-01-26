@@ -29,7 +29,7 @@ open class Intcode(val program: MutableList<Long>) {
 
     fun run(): Long {
         var flag = true
-        //println("opcode: ${program[currentPointer]%100}, reactants: $input, $this")
+        //println("opcode: ${program[currentPointer]%100}, inputs: $input, $this")
         while (flag) {
             val (opcode, params) = getOpcodeAndParams()
             when (opcode) {
@@ -45,7 +45,7 @@ open class Intcode(val program: MutableList<Long>) {
                 else -> { flag = false; }
             }
             currentPointer += opcode.size
-            //println("opcode: ${program[currentPointer]%100}, reactants: $input, $this")
+            //println("opcode: ${program[currentPointer]%100}, inputs: $input, $this")
 
         }
         return output

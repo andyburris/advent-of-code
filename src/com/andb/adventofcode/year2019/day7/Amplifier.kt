@@ -8,7 +8,6 @@ class Amplifier(val id: Int, program: MutableList<Long>) : Intcode(program) {
     override var output: Long = 0
         set(value){
             field = value
-            allOutputs.add(value)
             nextLink.input.add(value)
             //println("outputting $value to amp ${nextLink.id}")
             //println("products recieved? amp ${nextLink.id}.input = ${nextLink.input}")
