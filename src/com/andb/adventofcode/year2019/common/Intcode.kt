@@ -27,10 +27,11 @@ open class Intcode(val program: MutableList<Long>) {
     @Deprecated("Use input/products variables instead")
     fun outputFromCode() = program[0].toInt()
 
+    private var isRunning = false
     fun run(): Long {
-        var flag = true
         //println("opcode: ${program[currentPointer]%100}, inputs: $input, $this")
-        while (flag) {
+        isRunning = true
+        while (isRunning) {
             val (opcode, params) = getOpcodeAndParams()
             when (opcode) {
                 is Opcode.Add -> { program[params[2]] = program[params[0]] + program[params[1]] }
@@ -42,7 +43,7 @@ open class Intcode(val program: MutableList<Long>) {
                 is Opcode.LessThan -> { program[params[2]] = if(program[params[0]] < program[params[1]]) 1 else 0 }
                 is Opcode.Equals -> { program[params[2]] = if(program[params[0]] == program[params[1]]) 1 else 0 }
                 is Opcode.RelativeBase -> { relativeBase += program[params[0]]}
-                else -> { flag = false; }
+                else -> { isRunning = false; }
             }
             currentPointer += opcode.size
             //println("opcode: ${program[currentPointer]%100}, inputs: $input, $this")
@@ -51,7 +52,11 @@ open class Intcode(val program: MutableList<Long>) {
         return output
     }
 
-    fun getOpcodeAndParams(): Pair<Opcode, List<Parameter>>{
+    fun end(){
+        isRunning = false
+    }
+
+    private fun getOpcodeAndParams(): Pair<Opcode, List<Parameter>>{
         val instruction = program[currentPointer.toInt()]
         val code = instruction%100
         val opcode = when(code.toInt()){
