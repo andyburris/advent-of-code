@@ -2,12 +2,14 @@ package com.andb.adventofcode.year2019.day16
 
 import java.io.File
 import kotlin.math.absoluteValue
+import kotlin.system.measureTimeMillis
 
 private val reader = File("src/com/andb/adventofcode/year2019/day16/input.txt").bufferedReader()
+private val reader2 = File("src/com/andb/adventofcode/year2019/day16/input.txt").bufferedReader()
 private val testReader = File("src/com/andb/adventofcode/year2019/day16/test.txt").bufferedReader()
 
 fun main() {
-    //println(listOf(1, 2, 3).repeated(3))
+    //partOne()
     partTwo()
 }
 
@@ -19,22 +21,41 @@ private fun partOne() {
 
 private fun partTwo() {
     val input: List<Int> = reader.readLine().toString().map { it.toString().toInt() }
-    println("inputSize = ${input.size}")
     val offset = input.take(7).joinToString(separator = "").toInt()
     println("offset = $offset")
     val repeated = input.repeated(10000)
-    println("repeatedSize = ${repeated.size}")
-    val final = (1..100).toList().reduceGeneric(repeated) { phase, nextInput ->
-        println("parsed $phase")
-        parsePhase(nextInput)
-    }
-    println("finalSize = ${final.size}")
-    println(final.subList(offset, offset + 8).joinToString(separator = ""))
+    val currentInput = repeated.subList(offset, repeated.size).toMutableList()
+    println("time = " + measureTimeMillis {
+        repeat(100) { phase ->
+            println("running phase $phase, input = ${currentInput.take(8)}")
+            val sum = currentInput.sum()
+            currentInput.toList().foldIndexed(sum) { index, acc, value ->
+                if (index >= currentInput.size - 1) return@foldIndexed 0
+                val newSum = acc - value
+                currentInput[index + 1] = newSum.absoluteValue % 10
+                return@foldIndexed newSum
+            }
+            currentInput[0] = sum.absoluteValue % 10
+        }
+    })
+    println(currentInput.take(8).joinToString(separator = ""))
 }
 
-private fun parsePhase(input: List<Int>): List<Int> {
+
+private fun test() {
+    val input: MutableList<Int> = reader2.readLine().toString().map { it.toString().toInt() }.toMutableList()
+    input[0] = 4
+    input[2] = 4
+    val dropped = input.dropLast(input.size - 8).toList()
+    println("input = $input")
+    println("dropped = $dropped")
+    val final = (1..100).toList().reduceGeneric(input.toList()) { _, nextInput -> parsePhase(nextInput, input.size) }
+    println(final.take(8).joinToString(separator = ""))
+}
+
+private fun parsePhase(input: List<Int>, iterations: Int = input.size): List<Int> {
     val output = mutableListOf<Int>()
-    for (i in input.indices) {
+    for (i in 0 until iterations) {
         output.add(parseInput(input, i))
     }
     return output
