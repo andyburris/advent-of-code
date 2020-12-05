@@ -10,14 +10,14 @@ fun main(){
     partTwo()
 }
 
-fun partOne(){
+private fun partOne(){
     val software = reader.readLine().split(",").map { it.toLong() }.toIntcode()
     println(software)
     software.run()
     println(software.allOutputs)
 }
 
-fun partTwo(){
+private fun partTwo(){
     val software = reader.readLine().split(",").map { it.toLong() }.toIntcode()
     software.input = mutableListOf(2)
     println(software)

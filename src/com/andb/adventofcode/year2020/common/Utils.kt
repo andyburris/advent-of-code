@@ -18,3 +18,17 @@ fun <T> List<T>.tripleCombinations(): List<Triple<T, T, T>> = sequence {
         }
     }
 }.toList()
+
+fun <T> List<T>.takeEvery(amount: Int) = filterIndexed { index, _ -> index % amount == 0 }
+
+fun <T> List<T>.splitToGroups(separator: (T) -> Boolean): MutableList<MutableList<T>> {
+    val outList: MutableList<MutableList<T>> = mutableListOf(mutableListOf())
+    this.forEach {
+        if (separator.invoke(it)) {
+            outList.add(mutableListOf())
+        } else {
+            outList.last().add(it)
+        }
+    }
+    return outList
+}
