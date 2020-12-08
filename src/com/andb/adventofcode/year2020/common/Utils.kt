@@ -32,3 +32,5 @@ fun <T> List<T>.splitToGroups(separator: (T) -> Boolean): MutableList<MutableLis
     }
     return outList
 }
+
+fun <T> List<T>.mapAt(index: Int, transform: (old: T) -> T) = this.toMutableList().also { it[index] = transform(it[index]) }.toList()
