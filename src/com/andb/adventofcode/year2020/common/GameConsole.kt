@@ -20,6 +20,7 @@ fun String.toOperation() = when(this) {
 
 sealed class ConsoleResult {
     abstract val accumulated: Int
+
     data class Success(override val accumulated: Int) : ConsoleResult()
     sealed class Exception : ConsoleResult() {
         data class Loop(override val accumulated: Int, val stacktrace: List<Int>) : Exception()
