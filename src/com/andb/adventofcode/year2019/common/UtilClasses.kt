@@ -15,6 +15,11 @@ data class Coordinate(var x: Int, var y: Int) {
     fun surrounding(): List<Coordinate> {
         return listOf(copy(x = x + 1), copy(x = x - 1), copy(y = y + 1), copy(y = y - 1))
     }
+
+    operator fun plusAssign(coordinate: Coordinate) {
+        this.x += coordinate.x
+        this.y += coordinate.y
+    }
 }
 
 enum class Direction(val backingInt: Int) {
