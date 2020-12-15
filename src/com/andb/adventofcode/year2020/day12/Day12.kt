@@ -25,7 +25,7 @@ private fun partTwo(){
 }
 
 private data class Instruction(val action: Action, val amount: Int)
-enum class Action {
+private enum class Action {
     North, South, East, West, Left, Right, Forward,
 }
 

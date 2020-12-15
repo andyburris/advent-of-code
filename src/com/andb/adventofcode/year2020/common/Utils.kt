@@ -34,3 +34,5 @@ fun <T> List<T>.splitToGroups(separator: (T) -> Boolean): MutableList<MutableLis
 }
 
 fun <T> List<T>.mapAt(index: Int, transform: (old: T) -> T) = this.toMutableList().also { it[index] = transform(it[index]) }.toList()
+
+fun List<Long>.lcm() = this.fold(1L) { acc, l -> com.andb.adventofcode.lcm(acc, l) }

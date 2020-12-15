@@ -1,5 +1,6 @@
 package com.andb.adventofcode.year2019.day12
 
+import com.andb.adventofcode.lcm
 import com.andb.adventofcode.year2019.common.pow
 import java.io.File
 import kotlin.math.absoluteValue
@@ -109,5 +110,3 @@ data class Velocity(val x: Int = 0, val y: Int = 0, val z: Int = 0) {
     }
 }
 
-fun gcd(a: Long, b: Long): Long = if (b == 0L) a else gcd(b, a % b)
-fun lcm(a: Long, b: Long): Long = a / gcd(a, b) * b
