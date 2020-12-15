@@ -7,27 +7,28 @@ private val reader = File("src/com/andb/adventofcode/year2020/day15/input.txt").
 private val testReader = File("src/com/andb/adventofcode/year2020/day15/test.txt").bufferedReader()
 
 fun main(){
-    partOne()
-    //test()
-    //partTwo()
+    val startingNumbers = reader.readLine().split(",").map { it.toInt() }
+    partOne(startingNumbers)
+    partTwo(startingNumbers)
 }
 
-private fun partOne(){
-    val startingNumbers = reader.readLine().split(",").map { it.toInt() }
-    val said = startingNumbers.dropLast(1).mapIndexed { index: Int, i: Int -> i to index }.toMap().toMutableMap()
-    println(said)
-    var index = startingNumbers.size
-    var last = startingNumbers.last()
-    repeat(30000000 - index) {
+private fun partOne(startingNumbers: List<Int>){
+    println(startingNumbers.playGame(2020))
+}
+
+private fun partTwo(startingNumbers: List<Int>){
+    println(startingNumbers.playGame(30000000))
+}
+
+private fun List<Int>.playGame(turns: Int): Int {
+    val said = this.dropLast(1).mapIndexed { index: Int, i: Int -> i to index }.toMap().toMutableMap()
+    var index = this.size
+    var last = this.last()
+    repeat(turns - index) {
         val next = if (said.containsKey(last)) index - said[last]!! - 1 else 0
-        println("turn $index = $next")
         said[last] = index - 1
         index++
         last = next
     }
-    println(last)
-}
-
-private fun partTwo(){
-
+    return last
 }
