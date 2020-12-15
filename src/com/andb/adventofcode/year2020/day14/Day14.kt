@@ -7,52 +7,38 @@ private val reader = File("src/com/andb/adventofcode/year2020/day14/input.txt").
 private val testReader = File("src/com/andb/adventofcode/year2020/day14/test.txt").bufferedReader()
 
 fun main(){
-    //partOne()
-    partTwo()
-}
-
-private fun partOne(){
-    var mask = reader.readLine().removePrefix("mask = ")
-    println(11UL.maskV1(mask))
     val instructions = reader.readLines().map { it.toInstruction() }
-    println(instructions)
-    val memory = mutableMapOf<ULong, ULong>()
-    instructions.forEach {
-        when (it) {
-            is Instruction.SetMemory -> memory[it.location] = it.value.maskV1(mask)
-            is Instruction.SetMask -> mask = it.mask
-        }
-    }
-    println(memory.sumByLong { it.value.toLong() })
+    partOne(instructions)
+    partTwo(instructions)
 }
 
-private fun partTwo(){
-    var mask = reader.readLine().removePrefix("mask = ")
-    val instructions = reader.readLines().map { it.toInstruction() }
-    val memory = mutableMapOf<ULong, ULong>()
-    instructions.forEach {
-        when (it) {
-            is Instruction.SetMemory -> {
-                val memoryLocations = it.location.maskV2(mask)
-                println("memoryLocations for $instructions = $memoryLocations")
-                memoryLocations.forEach { location ->
-                    memory[location] = it.value
-                }
-            }
-            is Instruction.SetMask -> mask = it.mask
-        }
-    }
-    println(memory.sumByLong { it.value.toLong() })
+private fun partOne(instructions: List<Instruction>){
+    println(instructions.executeV1().memory.sumByLong { it.value.toLong() })
 }
 
-private fun test(){
+private fun partTwo(instructions: List<Instruction>){
+    println(instructions.executeV2().memory.sumByLong { it.value.toLong() })
+}
 
+private fun List<Instruction>.executeV1() = this.fold(PortComputer()) { computer, instruction ->
+    when (instruction) {
+        is Instruction.SetMemory -> computer.copy(memory = computer.memory.withValue(instruction.location, instruction.value.maskV1(computer.mask)))
+        is Instruction.SetMask -> computer.copy(mask = instruction.mask)
+    }
+}
+
+private fun List<Instruction>.executeV2() = this.fold(PortComputer()) { computer, instruction ->
+    when (instruction) {
+        is Instruction.SetMemory -> {
+            val memoryLocations = instruction.location.maskV2(computer.mask)
+            computer.copy(memory = computer.memory.withValues(memoryLocations.map { it to instruction.value }))
+        }
+        is Instruction.SetMask -> computer.copy(mask = instruction.mask)
+    }
 }
 
 private fun ULong.maskV1(bitmask: String): ULong {
-    val string = this.toString(2)
-    val padded = string.padStart(36, '0')
-    println("padded for $this = $padded (${padded.length})")
+    val padded = this.toString(2).padStart(36, '0')
     return bitmask.mapIndexed { index: Int, c: Char ->
         when (c) {
             'X' -> padded[index]
@@ -63,24 +49,21 @@ private fun ULong.maskV1(bitmask: String): ULong {
 }
 
 private fun ULong.maskV2(bitmask: String): List<ULong> {
-    val string = this.toString(2)
-    val padded = string.padStart(36, '0')
-    val onesOverwritten = bitmask.mapIndexed { index: Int, c: Char ->
-        when (c) {
-            '1', 'X' -> c
-            else -> padded[index]
-        }
-    }.joinToString("")
-    println("onesOverwritten = $onesOverwritten")
-    var enumerateFloating = listOf(onesOverwritten)
-    while (enumerateFloating.any { it.contains('X') }) {
-        enumerateFloating = enumerateFloating.map {
-            listOf(it.replaceFirst('X', '0'), it.replaceFirst('X', '1'))
-        }.flatten()
-    }
-    println("enumerateFloating = $enumerateFloating")
-    return enumerateFloating.map { it.toULong(2) }
+    val padded = this.toString(2).padStart(36, '0')
+    val onesOverwritten = bitmask
+        .mapIndexed { index: Int, c: Char ->
+            when (c) {
+                '1', 'X' -> c
+                else -> padded[index]
+            }
+        }.joinToString("")
+    return onesOverwritten.fold(listOf(onesOverwritten)) { acc, c ->
+        if (c != 'X') return@fold acc
+        acc.map { listOf(it.replaceFirst('X', '0'), it.replaceFirst('X', '1')) }.flatten()
+    }.map { it.toULong(2) }
 }
+
+private data class PortComputer(val mask: String = "", val memory: Map<ULong, ULong> = mutableMapOf<ULong, ULong>())
 
 private sealed class Instruction {
     data class SetMemory(val location: ULong, val value: ULong) : Instruction()
@@ -96,3 +79,6 @@ private fun String.toInstruction(): Instruction {
         else -> throw Error("invalid line = $this")
     }
 }
+
+fun <K, V> Map<K, V>.withValue(key: K, value: V) = this.toMutableMap().also { it[key] = value }.toMap()
+fun <K, V> Map<K, V>.withValues(values: List<Pair<K, V>>) = this.toMutableMap().also { it.putAll(values) }.toMap()
