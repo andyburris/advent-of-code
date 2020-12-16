@@ -1,7 +1,6 @@
 package com.andb.adventofcode.year2020.day15
 
 import java.io.File
-import kotlin.test.assertEquals
 
 private val reader = File("src/com/andb/adventofcode/year2020/day15/input.txt").bufferedReader()
 private val testReader = File("src/com/andb/adventofcode/year2020/day15/test.txt").bufferedReader()
