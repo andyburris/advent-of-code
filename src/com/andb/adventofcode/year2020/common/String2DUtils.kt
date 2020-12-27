@@ -72,4 +72,9 @@ fun List<String>.lineOfSightChars(
         }
 }
 
+fun List<String>.column(index: Int): String = this.map { it[index] }.joinToString("")
+fun List<String>.row(index: Int): String = this[index]
+fun List<String>.cw(): List<String> = this.mapIndexed { index: Int, s: String -> this.column(size - index - 1) }
+fun List<String>.ccw(): List<String> = this.mapIndexed { index: Int, s: String -> this.column(index) }
+
 typealias String2D = List<String>

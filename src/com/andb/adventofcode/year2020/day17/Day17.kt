@@ -10,7 +10,6 @@ private val testReader = File("src/com/andb/adventofcode/year2020/day17/test.txt
 
 fun main(){
     //partOne()
-    partTwo(testReader.readLines().mapIndexed { row, line -> line.mapIndexed { col, c -> c.toCube4D(row, col) } }.flatten())
     partTwo(reader.readLines().mapIndexed { row, line -> line.mapIndexed { col, c -> c.toCube4D(row, col) } }.flatten())
 }
 
@@ -30,20 +29,31 @@ private fun partTwo(initialSlice: List<Cube4D>){
         cycled
     }.count { it.active }
     println(count)
-    //println(initialSlice.cycle4D().cycle4D().cycle4D().cycle4D().cycle4D().cycle4D().count { it.active })
 }
 
-private fun test(){
-
-}
-
+private val memoized3DNeighbors = mutableMapOf<Coordinate3D, List<Coordinate3D>>()
 private data class Coordinate3D(val x: Int, val y: Int, val z: Int) {
-    fun neighbors() = (-1..1).toList().tripleCombinations().map { Coordinate3D(x + it.first, y + it.second, z + it.third) } - this
+    fun neighbors() = when{
+        this in memoized3DNeighbors -> memoized3DNeighbors.getValue(this)
+        else -> {
+            val neighbors = (-1..1).toList().tripleCombinations().map { Coordinate3D(x + it.first, y + it.second, z + it.third) } - this
+            memoized3DNeighbors[this] = neighbors
+            neighbors
+        }
+    }
 }
 
+private val memoized4DNeighbors = mutableMapOf<Coordinate4D, List<Coordinate4D>>()
 private val neighborsOffset = (-1..1).toList().quadCombinations() - Quad(0, 0, 0, 0)
 private data class Coordinate4D(val x: Int, val y: Int, val z: Int, val w: Int) {
-    fun neighbors() = neighborsOffset.map { Coordinate4D(x + it.first, y + it.second, z + it.third, w + it.fourth) }
+    fun neighbors() = when (this) {
+        in memoized4DNeighbors -> memoized4DNeighbors.getValue(this)
+        else -> {
+            val neighbors = neighborsOffset.map { Coordinate4D(x + it.first, y + it.second, z + it.third, w + it.fourth) }
+            memoized4DNeighbors[this] = neighbors
+            neighbors
+        }
+    }
 }
 private fun Coordinate4D.toCoordinate3D() = Coordinate3D(x, y, z)
 
@@ -107,12 +117,16 @@ private fun List<Cube3D>.cycle3D() = this.cube3DNeighbors().map {
     return@map it.copy(active = active)
 }
 
-private fun List<Cube4D>.cycle4D(neighbors: List<Cube4D> = this.cube4DNeighbors()) = neighbors.map {
-    val activeNeighbors = it.neighbors(this).count { it.active }
-    val active = when {
-        it.active && (activeNeighbors == 2 || activeNeighbors == 3) -> true
-        !it.active && activeNeighbors == 3 -> true
-        else -> false
+private fun List<Cube4D>.cycle4D(): List<Cube4D> {
+    val neighbors = this.cube4DNeighbors()
+    println("found neighbors")
+    return neighbors.map {
+        val activeNeighbors = it.neighbors(this).count { it.active }
+        val active = when {
+            it.active && (activeNeighbors == 2 || activeNeighbors == 3) -> true
+            !it.active && activeNeighbors == 3 -> true
+            else -> false
+        }
+        return@map it.copy(active = active)
     }
-    return@map it.copy(active = active)
 }

@@ -6,22 +6,17 @@ private val reader = File("src/com/andb/adventofcode/year2020/day18/input.txt").
 private val testReader = File("src/com/andb/adventofcode/year2020/day18/test.txt").bufferedReader()
 
 fun main() {
-    //partOne()
-    partTwo()
+    val expressions = reader.readLines().map { it.toValues() }
+    partOne(expressions)
+    partTwo(expressions)
 }
 
-private fun partOne() {
-    val expressions = reader.readLines().map { it.toValues() }
+private fun partOne(expressions: List<List<Value>>) {
     println(expressions.fold(0L) { acc, list -> acc + list.evaluateBasic() })
 }
 
-private fun partTwo() {
-    val expressions = reader.readLines().map { it.toValues() }
+private fun partTwo(expressions: List<List<Value>>) {
     println(expressions.fold(0L) { acc, list -> acc + list.evaluateAdvanced() })
-}
-
-private fun test() {
-
 }
 
 private sealed class Value {
@@ -80,12 +75,7 @@ private fun List<Value>.evaluateBasic(): Long =
         }
     }.first
 
-private fun List<Value>.evaluateAdvanced(): Long {
-    val grouped = this.groupByPriority()
-    println("this = $this")
-    println("grouped = $grouped")
-    return grouped.evaluateBasic()
-}
+private fun List<Value>.evaluateAdvanced(): Long = this.groupByPriority().evaluateBasic()
 
 private fun List<Value>.groupByPriority(): List<Value> {
     val groupNested = this.map { if (it is Value.Group) it.copy(values = it.values.groupByPriority()) else it }
