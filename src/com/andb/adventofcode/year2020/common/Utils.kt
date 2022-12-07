@@ -53,11 +53,15 @@ public fun <T> kotlin.Triple<T, T, T>.toList(): List<T> = listOf(first, second, 
 
 fun <T> List<T>.takeEvery(amount: Int) = filterIndexed { index, _ -> index % amount == 0 }
 
-fun <T> List<T>.splitToGroups(separator: (T) -> Boolean): MutableList<MutableList<T>> {
+fun <T> List<T>.splitToGroups(dropSeparator: Boolean = true, separator: (T) -> Boolean): MutableList<MutableList<T>> {
     val outList: MutableList<MutableList<T>> = mutableListOf(mutableListOf())
     this.forEach {
         if (separator.invoke(it)) {
-            outList.add(mutableListOf())
+            if (dropSeparator) {
+                outList.add(mutableListOf())
+            } else {
+                outList.add(mutableListOf(it))
+            }
         } else {
             outList.last().add(it)
         }
