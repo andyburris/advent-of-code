@@ -8,11 +8,6 @@ private val reader = File("src/com/andb/adventofcode/year2022/day7/input.txt").b
 private val testReader = File("src/com/andb/adventofcode/year2022/day7/test.txt").bufferedReader()
 
 fun main(){
-    //partOne()
-    partTwo()
-}
-
-private fun partOne(){
     val commandsRaw: List<List<String>> = reader.readLines().splitToGroups(dropSeparator = false) { it.first() == '$' }.filter { it.isNotEmpty() }
     val commands = commandsRaw.map { it.toCommand() }
 
@@ -31,31 +26,15 @@ private fun partOne(){
 
     val allSizes = allSizedDirectories.map { it.calculateSize(allSizedDirectories) }
 
-    println(allSizedDirectories)
-    println(allSizes)
+    //partOne(allSizes)
+    partTwo(allSizes)
+}
+
+private fun partOne(allSizes: List<Int>){
     println(allSizes.filter { it <= 100000 }.sum())
 }
 
-private fun partTwo(){
-
-    val commandsRaw: List<List<String>> = reader.readLines().splitToGroups(dropSeparator = false) { it.first() == '$' }.filter { it.isNotEmpty() }
-    val commands = commandsRaw.map { it.toCommand() }
-
-    val allSizedDirectories = commands.fold(emptyList<String>() to emptyList<SizedDirectory>()) { (currentPath, acc), command ->
-        when(command) {
-            is Command.Cd -> if (command.directoryName == "..") currentPath.dropLast(1) to acc else currentPath.plus(command.directoryName) to acc
-            is Command.Ls -> currentPath to acc.plus(
-                SizedDirectory(
-                    currentPath,
-                    command.results.filterIsInstance<DirectoryItem.File>().map { it.size },
-                    command.results.filterIsInstance<DirectoryItem.Directory>().map { currentPath + it.name }
-                )
-            )
-        }
-    }.second
-
-    val allSizes = allSizedDirectories.map { it.calculateSize(allSizedDirectories) }
-
+private fun partTwo(allSizes: List<Int>){
     val rootSize = allSizes.maxOf { it }
     val alreadyFreeSpace = 70000000 - rootSize
     val needToFree = 30000000 - alreadyFreeSpace
