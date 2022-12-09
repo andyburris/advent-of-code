@@ -32,12 +32,13 @@ private fun partOne(){
     println(visited.distinct().size)
 }
 
+private val printableRange = -15 until 16
 private fun partTwo(){
-    val steps: List<Direction> = test2Reader.readLines()
+    val steps: List<Direction> = reader.readLines()
         .map { raw -> List(raw.trim().takeLastWhile { it in '0'..'9' }.toInt()) { raw.first().toDirection() } }
         .flatten()
     val initialInfo = SnappedRopeInfo(listOf(Coordinate(0, 0)), (0..9).map { Coordinate(0, 0) })
-    val initialPrintable = initialInfo.knotsCoordinates.printable(-15 until 16, -15 until 16)
+    val initialPrintable = initialInfo.knotsCoordinates.printable(printableRange, printableRange)
     val finalInfo = steps.fold<Direction, Pair<SnappedRopeInfo, Pair<String?, Direction?>>>(initialInfo to (initialPrintable to null)) { (acc, lastStepInfo), step ->
         val newHeadReal = acc.knotsCoordinates.first().move(step)
         val newKnots = acc.knotsCoordinates.drop(1).fold(newHeadReal to listOf(newHeadReal)) { (last, acc), current ->
@@ -50,21 +51,22 @@ private fun partTwo(){
                     current.y > last.y -> Direction.SOUTH
                     else -> throw Error("should be adjacent")
                 }
-                return@fold current.move(step) to (acc + current.move(movement))
+                return@fold current.move(movement) to (acc + current.move(movement))
             }
 
             val newCurrent = current.copy(
                 x = if (last.x > current.x) current.x + 1 else current.x - 1,
                 y = if (last.y > current.y) current.y + 1 else current.y - 1,
             )
+            if (!newCurrent.isAdjacentTo(last)) throw Error("NOT ADJACENT! newCurrent = $newCurrent, last = $last, head = $newHeadReal, step = $step, lastStep = ${lastStepInfo.second}, printable = ${lastStepInfo.first}")
             newCurrent to acc + newCurrent
         }.second
         if (step != lastStepInfo.second) {
-            println(lastStepInfo.first)
+            //println(lastStepInfo.first)
         }
-        SnappedRopeInfo(visitedTailCoordinates = acc.visitedTailCoordinates + newKnots.last(), knotsCoordinates = newKnots) to (newKnots.printable(-15 until 16, -15 until 16) to step)
+        SnappedRopeInfo(visitedTailCoordinates = acc.visitedTailCoordinates + newKnots.last(), knotsCoordinates = newKnots) to (newKnots.printable(printableRange, printableRange) to step)
     }.first
-    println(finalInfo.knotsCoordinates.printable(-15 until 16, -15 until 16))
+    println(finalInfo.knotsCoordinates.printable(printableRange, printableRange))
     println(finalInfo.visitedTailCoordinates.distinct().size)
 }
 
