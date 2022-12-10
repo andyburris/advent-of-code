@@ -32,14 +32,12 @@ private fun partOne(){
     println(visited.distinct().size)
 }
 
-private val printableRange = -15 until 16
 private fun partTwo(){
     val steps: List<Direction> = reader.readLines()
         .map { raw -> List(raw.trim().takeLastWhile { it in '0'..'9' }.toInt()) { raw.first().toDirection() } }
         .flatten()
     val initialInfo = SnappedRopeInfo(listOf(Coordinate(0, 0)), (0..9).map { Coordinate(0, 0) })
-    val initialPrintable = initialInfo.knotsCoordinates.printable(printableRange, printableRange)
-    val finalInfo = steps.fold<Direction, Pair<SnappedRopeInfo, Pair<String?, Direction?>>>(initialInfo to (initialPrintable to null)) { (acc, lastStepInfo), step ->
+    val finalInfo = steps.fold(initialInfo) { acc, step ->
         val newHeadReal = acc.knotsCoordinates.first().move(step)
         val newKnots = acc.knotsCoordinates.drop(1).fold(newHeadReal to listOf(newHeadReal)) { (last, acc), current ->
             if (last.isAdjacentTo(current)) return@fold current to acc + current
@@ -58,15 +56,11 @@ private fun partTwo(){
                 x = if (last.x > current.x) current.x + 1 else current.x - 1,
                 y = if (last.y > current.y) current.y + 1 else current.y - 1,
             )
-            if (!newCurrent.isAdjacentTo(last)) throw Error("NOT ADJACENT! newCurrent = $newCurrent, last = $last, head = $newHeadReal, step = $step, lastStep = ${lastStepInfo.second}, printable = ${lastStepInfo.first}")
             newCurrent to acc + newCurrent
         }.second
-        if (step != lastStepInfo.second) {
-            //println(lastStepInfo.first)
-        }
-        SnappedRopeInfo(visitedTailCoordinates = acc.visitedTailCoordinates + newKnots.last(), knotsCoordinates = newKnots) to (newKnots.printable(printableRange, printableRange) to step)
-    }.first
-    println(finalInfo.knotsCoordinates.printable(printableRange, printableRange))
+        SnappedRopeInfo(visitedTailCoordinates = acc.visitedTailCoordinates + newKnots.last(), knotsCoordinates = newKnots)
+    }
+
     println(finalInfo.visitedTailCoordinates.distinct().size)
 }
 
@@ -90,14 +84,13 @@ fun Coordinate.isAdjacentTo(other: Coordinate) = other.x in (this.x - 1)..(this.
 fun Coordinate.isParallelTo(other: Coordinate) = this.x == other.x || this.y == other.y
 
 
-private fun List<Coordinate>.printable(xRange: IntRange, yRange: IntRange): String = buildString {
+private fun List<Coordinate>.printable(xRange: IntRange = -15 until 16, yRange: IntRange = -15 until 16): String = buildString {
     yRange.reversed().map { y ->
         xRange.map { x ->
             val lowestIndexAtCoordinate = this@printable.indexOfFirst { it == Coordinate(x, y) }
             when(lowestIndexAtCoordinate) {
                 -1 -> append('.')
                 0 -> append('H')
-                //this@printable.size - 1 -> append('T')
                 else -> append(lowestIndexAtCoordinate.digitToChar())
             }
         }

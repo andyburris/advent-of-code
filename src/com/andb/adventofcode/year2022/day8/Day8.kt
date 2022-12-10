@@ -9,11 +9,13 @@ private val reader = File("src/com/andb/adventofcode/year2022/day8/input.txt").b
 private val testReader = File("src/com/andb/adventofcode/year2022/day8/test.txt").bufferedReader()
 
 fun main() {
-    partTwo()
+    val trees: List<List<Int>> = reader.readLines().map { line -> line.toList().map{ it.digitToInt() } }
+    //partOne(trees)
+    partTwo(trees)
 }
 
-fun partOne() {
-    val trees: List<List<Int>> = reader.readLines().map { line -> line.toList().map{ it.digitToInt() } }
+fun partOne(trees: List<List<Int>>) {
+
     val allCoordinates = (trees.indices).flatMap { row -> trees[0].indices.map { col -> row to col }}
     println(allCoordinates)
 
@@ -29,8 +31,7 @@ fun partOne() {
     println(visibleTrees.size)
 }
 
-fun partTwo() {
-    val trees: List<List<Int>> = reader.readLines().map { line -> line.toList().map{ it.digitToInt() } }
+fun partTwo(trees: List<List<Int>>) {
     val scenicScores: List<List<Int>> = trees.sightlines().map { row ->
         row.map { it.score() }
     }
@@ -41,7 +42,6 @@ fun test() {
 
 }
 
-private fun <T : Comparable<T>> List<T>.isSorted(): Boolean = this.windowed(2).all { it[0] < it[1] }
 private fun List<Int>.isVisible(): Boolean = this.last() > (this.dropLast(1).maxOfOrNull { it } ?: -1)
 
 private fun List<List<Int>>.sightlines(): List<List<Sightlines>> {
