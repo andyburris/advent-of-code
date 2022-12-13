@@ -8,28 +8,33 @@ private val reader = File("src/com/andb/adventofcode/year2022/day12/input.txt").
 private val testReader = File("src/com/andb/adventofcode/year2022/day12/test.txt").bufferedReader()
 
 fun main(){
-    partOne()
+    //partOne()
     partTwo()
 }
 
 private fun partOne(){
-    val rawElevations = testReader.readLines().map { it.toList() }
-    val startingCoordinate = Coordinate(rawElevations.indexOfFirst { 'S' in it }, rawElevations.first { 'S' in it }.indexOf('S'))
-    val endingCoordinate = Coordinate(rawElevations.indexOfFirst { 'E' in it }, rawElevations.first { 'E' in it }.indexOf('E'))
+    val rawElevations = reader.readLines().map { it.toList() }
+    val startingCoordinate = Coordinate(rawElevations.first { 'S' in it }.indexOf('S'), rawElevations.indexOfFirst { 'S' in it })
+    val endingCoordinate = Coordinate(rawElevations.first { 'E' in it }.indexOf('E'), rawElevations.indexOfFirst { 'E' in it })
+    println(startingCoordinate)
+    println(endingCoordinate)
 
-    val replacedElevations = rawElevations.replaceCoordinate(startingCoordinate) { 'a' }.replaceCoordinate(endingCoordinate) { 'z' }
+
+    val replacedElevations: List<List<Char>> = rawElevations.replaceCoordinate(startingCoordinate) { 'a' }.replaceCoordinate(endingCoordinate) { 'z' }
     println(replacedElevations.joinToString("\n"){ it.joinToString("") })
     val edges: List<TopographyEdge> = replacedElevations.flatMapIndexed { y, rawElevationRow ->
         rawElevationRow.flatMapIndexed { x, rawElevation ->
             val thisCoord = Coordinate(x, y)
-            val surroundingCoords = thisCoord.surrounding()
-            val edges = surroundingCoords.filter { rawElevation.canMoveTo(rawElevations[y][x]) }.map { TopographyEdge(thisCoord, it) }
+            val surroundingCoords = thisCoord.surrounding().filter { it.x in replacedElevations.first().indices && it.y in replacedElevations.indices }
+            val edges = surroundingCoords.filter {
+                rawElevation.canMoveTo(replacedElevations[it.y][it.x])
+            }.map { TopographyEdge(thisCoord, it) }
             edges
         }
     }
     println(edges)
     val path = breadthFirstSearch(edges, startingCoordinate, endingCoordinate)
-    println(path.size)
+    println(path.size - 1)
 }
 
 private fun breadthFirstSearch(edges: List<TopographyEdge>, startingCoordinate: Coordinate, endingCoordinate: Coordinate): List<Coordinate> {
@@ -48,15 +53,51 @@ private fun breadthFirstSearch(edges: List<TopographyEdge>, startingCoordinate: 
     throw Error("not found")
 }
 
-private fun partTwo(){
+private fun breadthFirstSearchFunctional(edges: List<TopographyEdge>, startingCoordinate: Coordinate, isEndingCoordinate: (Coordinate) -> Boolean): List<Coordinate> {
+    val queue = mutableListOf(TopographyEdge(null, startingCoordinate))
+    val visitedPaths = mutableListOf<Pair<Coordinate, List<Coordinate>>>()
 
+    while (queue.isNotEmpty()) {
+        val currentEdge = queue.removeAt(0)
+        val current = currentEdge.to
+        if (current !in visitedPaths.map { it.first }) {
+            visitedPaths += current to (visitedPaths.find { it.first == currentEdge.from }?.second ?: emptyList()) + current
+            if (isEndingCoordinate(current)) return visitedPaths.first { isEndingCoordinate(it.first) }.second
+            queue += edges.filter { it.from == current }
+        }
+    }
+    throw Error("not found")
+}
+
+private fun partTwo(){
+    val rawElevations = reader.readLines().map { it.toList() }
+    val startingCoordinate = Coordinate(rawElevations.first { 'S' in it }.indexOf('S'), rawElevations.indexOfFirst { 'S' in it })
+    val endingCoordinate = Coordinate(rawElevations.first { 'E' in it }.indexOf('E'), rawElevations.indexOfFirst { 'E' in it })
+    println(startingCoordinate)
+    println(endingCoordinate)
+
+
+    val replacedElevations: List<List<Char>> = rawElevations.replaceCoordinate(startingCoordinate) { 'a' }.replaceCoordinate(endingCoordinate) { 'z' }
+    val edges: List<TopographyEdge> = replacedElevations.flatMapIndexed { y, rawElevationRow ->
+        rawElevationRow.flatMapIndexed { x, rawElevation ->
+            val thisCoord = Coordinate(x, y)
+            val surroundingCoords = thisCoord.surrounding().filter { it.x in replacedElevations.first().indices && it.y in replacedElevations.indices }
+            val edges = surroundingCoords.filter {
+                //rawElevation.canMoveTo(replacedElevations[it.y][it.x])
+                replacedElevations[it.y][it.x].canMoveTo(rawElevation)
+            }.map { TopographyEdge(thisCoord, it) }
+            edges
+        }
+    }
+    val path = breadthFirstSearchFunctional(edges, endingCoordinate) { coord -> replacedElevations[coord.y][coord.x] == 'a'}
+    println(path.size - 1)
 }
 
 private fun test(){
 
 }
 
-private fun Char.canMoveTo(other: Char) = this >= other + 1
+private fun Char.canMoveTo(other: Char) = (this + 1) >= other
 
 private data class TopographyGraph(val nodes: List<TopographyNode>, val edges: List<TopographyEdge>)
 private data class TopographyNode(val elevation: Char, val coordinate: Coordinate)
