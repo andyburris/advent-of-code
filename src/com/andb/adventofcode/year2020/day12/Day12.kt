@@ -67,7 +67,7 @@ private fun List<Instruction>.executeMovement(): Coordinate {
 
 private fun List<Instruction>.executeWaypoint(): Coordinate {
     var relativeWaypoint = Coordinate(10, 1)
-    var coordinate = Coordinate(0, 0)
+    val coordinate = Coordinate(0, 0)
 
     println("coordinate = $coordinate, relativeWaypoint = $relativeWaypoint")
     this.forEach {

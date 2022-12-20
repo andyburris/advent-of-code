@@ -23,6 +23,10 @@ data class Coordinate(var x: Int, var y: Int) {
         this.y += coordinate.y
     }
 
+    operator fun plus(coordinate: Coordinate): Coordinate {
+        return Coordinate(this.x + coordinate.x, this.y + coordinate.y)
+    }
+
     fun manhattanDistanceTo(other: Coordinate): Int = (this.x - other.x).absoluteValue + (this.y - other.y).absoluteValue
 }
 

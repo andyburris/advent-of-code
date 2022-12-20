@@ -14,7 +14,7 @@ fun main() {
     partTwo(trees)
 }
 
-fun partOne(trees: List<List<Int>>) {
+private fun partOne(trees: List<List<Int>>) {
 
     val allCoordinates = (trees.indices).flatMap { row -> trees[0].indices.map { col -> row to col }}
     println(allCoordinates)
@@ -31,14 +31,14 @@ fun partOne(trees: List<List<Int>>) {
     println(visibleTrees.size)
 }
 
-fun partTwo(trees: List<List<Int>>) {
+private fun partTwo(trees: List<List<Int>>) {
     val scenicScores: List<List<Int>> = trees.sightlines().map { row ->
         row.map { it.score() }
     }
     println(scenicScores.flatten().maxOf { it })
 }
 
-fun test() {
+private fun test() {
 
 }
 

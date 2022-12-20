@@ -25,7 +25,7 @@ private fun partTwo(){
     println(software.allOutputs)
 }
 
-fun test(){
+private fun test(){
     val software1 = testReader.readLine().split(",").map { it.toLong() }.toIntcode()
     val software2 = testReader.readLine().split(",").map { it.toLong() }.toIntcode()
     val software3 = testReader.readLine().split(",").map { it.toLong() }.toIntcode()
