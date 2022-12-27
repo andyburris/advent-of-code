@@ -13,7 +13,6 @@ fun <T> List<T>.tripleCombinations(): List<Triple<T, T, T>> = sequence {
         this@tripleCombinations.forEach { n2 ->
             this@tripleCombinations.forEach { n3 ->
                 yield(Triple(n1, n2, n3))
-
             }
         }
     }
